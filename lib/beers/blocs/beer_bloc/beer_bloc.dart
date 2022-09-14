@@ -12,20 +12,41 @@ class BeerBloc extends Bloc<BeerEvent, BeerState> {
   final BeersRepository repository;
 
   BeerBloc({required this.repository}) : super(const BeerState.initial()) {
+    on<_ToggleFavorite>(_toggleFavorite);
     on<_FetchData>(_fetchData);
   }
 
-  Set<Beer> selectedBeers = {};
-
   Future<void> _fetchData(_FetchData event, Emitter emit) async {
     emit(const BeerState.loading());
+    Set<Beer> selectedBeers = {};
 
     try {
       final beers = await repository.getPosts();
 
-      return emit(BeerState.loaded(beers: beers));
+      return emit(BeerState.loaded(
+        beers: beers,
+        selectedBeers: selectedBeers,
+      ));
     } catch (error) {
       emit(BeerState.error(error: error.toString()));
     }
+  }
+
+  Future<void> _toggleFavorite(_ToggleFavorite event, Emitter emit) async {
+    state.maybeMap(
+        orElse: () {},
+        loaded: (state) {
+          if (state.selectedBeers.contains(event.beer)) {
+            emit(BeerState.loaded(
+              beers: state.beers,
+              selectedBeers: {...state.selectedBeers}..remove(event.beer),
+            ));
+          } else {
+            emit(BeerState.loaded(
+              beers: state.beers,
+              selectedBeers: {...state.selectedBeers}..add(event.beer),
+            ));
+          }
+        });
   }
 }

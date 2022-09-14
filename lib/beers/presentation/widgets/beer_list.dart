@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../beers.dart';
 
 class BlocksList extends StatelessWidget {
   final List<Beer> beersList;
+  final Set<Beer> favoriteBeersList;
 
   const BlocksList({
     required this.beersList,
+    required this.favoriteBeersList,
     Key? key,
   }) : super(key: key);
 
@@ -16,6 +19,12 @@ class BlocksList extends StatelessWidget {
       itemCount: beersList.length,
       itemBuilder: (context, index) => BeerListItem(
         beer: beersList[index],
+        isFavorite: favoriteBeersList.contains(beersList[index]),
+        onIconTap: () {
+          context
+              .read<BeerBloc>()
+              .add(BeerEvent.toggleFavorite(beer: beersList[index]));
+        },
       ),
     );
   }

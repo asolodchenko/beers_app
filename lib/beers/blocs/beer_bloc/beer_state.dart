@@ -8,6 +8,7 @@ class BeerState with _$BeerState {
 
   const factory BeerState.loaded({
     required List<Beer> beers,
+    required Set<Beer> selectedBeers,
   }) = LoadedBeerState;
 
   const factory BeerState.error({required String error}) = _ErrorBeerState;

@@ -324,7 +324,7 @@ mixin _$BeerState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Beer> beers) loaded,
+    required TResult Function(List<Beer> beers, Set<Beer> selectedBeers) loaded,
     required TResult Function(String error) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -332,7 +332,7 @@ mixin _$BeerState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -340,7 +340,7 @@ mixin _$BeerState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) =>
@@ -430,7 +430,7 @@ class _$_InitialBeerState implements _InitialBeerState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Beer> beers) loaded,
+    required TResult Function(List<Beer> beers, Set<Beer> selectedBeers) loaded,
     required TResult Function(String error) error,
   }) {
     return initial();
@@ -441,7 +441,7 @@ class _$_InitialBeerState implements _InitialBeerState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
   }) {
     return initial?.call();
@@ -452,7 +452,7 @@ class _$_InitialBeerState implements _InitialBeerState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -547,7 +547,7 @@ class _$_LoadingBeerState implements _LoadingBeerState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Beer> beers) loaded,
+    required TResult Function(List<Beer> beers, Set<Beer> selectedBeers) loaded,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -558,7 +558,7 @@ class _$_LoadingBeerState implements _LoadingBeerState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
   }) {
     return loading?.call();
@@ -569,7 +569,7 @@ class _$_LoadingBeerState implements _LoadingBeerState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -626,7 +626,7 @@ abstract class _$$LoadedBeerStateCopyWith<$Res> {
   factory _$$LoadedBeerStateCopyWith(
           _$LoadedBeerState value, $Res Function(_$LoadedBeerState) then) =
       __$$LoadedBeerStateCopyWithImpl<$Res>;
-  $Res call({List<Beer> beers});
+  $Res call({List<Beer> beers, Set<Beer> selectedBeers});
 }
 
 /// @nodoc
@@ -643,12 +643,17 @@ class __$$LoadedBeerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? beers = freezed,
+    Object? selectedBeers = freezed,
   }) {
     return _then(_$LoadedBeerState(
       beers: beers == freezed
           ? _value._beers
           : beers // ignore: cast_nullable_to_non_nullable
               as List<Beer>,
+      selectedBeers: selectedBeers == freezed
+          ? _value._selectedBeers
+          : selectedBeers // ignore: cast_nullable_to_non_nullable
+              as Set<Beer>,
     ));
   }
 }
@@ -656,7 +661,10 @@ class __$$LoadedBeerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedBeerState implements LoadedBeerState {
-  const _$LoadedBeerState({required final List<Beer> beers}) : _beers = beers;
+  const _$LoadedBeerState(
+      {required final List<Beer> beers, required final Set<Beer> selectedBeers})
+      : _beers = beers,
+        _selectedBeers = selectedBeers;
 
   final List<Beer> _beers;
   @override
@@ -665,9 +673,16 @@ class _$LoadedBeerState implements LoadedBeerState {
     return EqualUnmodifiableListView(_beers);
   }
 
+  final Set<Beer> _selectedBeers;
+  @override
+  Set<Beer> get selectedBeers {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_selectedBeers);
+  }
+
   @override
   String toString() {
-    return 'BeerState.loaded(beers: $beers)';
+    return 'BeerState.loaded(beers: $beers, selectedBeers: $selectedBeers)';
   }
 
   @override
@@ -675,12 +690,16 @@ class _$LoadedBeerState implements LoadedBeerState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LoadedBeerState &&
-            const DeepCollectionEquality().equals(other._beers, _beers));
+            const DeepCollectionEquality().equals(other._beers, _beers) &&
+            const DeepCollectionEquality()
+                .equals(other._selectedBeers, _selectedBeers));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_beers));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_beers),
+      const DeepCollectionEquality().hash(_selectedBeers));
 
   @JsonKey(ignore: true)
   @override
@@ -692,10 +711,10 @@ class _$LoadedBeerState implements LoadedBeerState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Beer> beers) loaded,
+    required TResult Function(List<Beer> beers, Set<Beer> selectedBeers) loaded,
     required TResult Function(String error) error,
   }) {
-    return loaded(beers);
+    return loaded(beers, selectedBeers);
   }
 
   @override
@@ -703,10 +722,10 @@ class _$LoadedBeerState implements LoadedBeerState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
   }) {
-    return loaded?.call(beers);
+    return loaded?.call(beers, selectedBeers);
   }
 
   @override
@@ -714,12 +733,12 @@ class _$LoadedBeerState implements LoadedBeerState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(beers);
+      return loaded(beers, selectedBeers);
     }
     return orElse();
   }
@@ -763,10 +782,12 @@ class _$LoadedBeerState implements LoadedBeerState {
 }
 
 abstract class LoadedBeerState implements BeerState {
-  const factory LoadedBeerState({required final List<Beer> beers}) =
-      _$LoadedBeerState;
+  const factory LoadedBeerState(
+      {required final List<Beer> beers,
+      required final Set<Beer> selectedBeers}) = _$LoadedBeerState;
 
   List<Beer> get beers;
+  Set<Beer> get selectedBeers;
   @JsonKey(ignore: true)
   _$$LoadedBeerStateCopyWith<_$LoadedBeerState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -839,7 +860,7 @@ class _$_ErrorBeerState implements _ErrorBeerState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Beer> beers) loaded,
+    required TResult Function(List<Beer> beers, Set<Beer> selectedBeers) loaded,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -850,7 +871,7 @@ class _$_ErrorBeerState implements _ErrorBeerState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -861,7 +882,7 @@ class _$_ErrorBeerState implements _ErrorBeerState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Beer> beers)? loaded,
+    TResult Function(List<Beer> beers, Set<Beer> selectedBeers)? loaded,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

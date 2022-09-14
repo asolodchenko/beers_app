@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../beers.dart';
 import '../screens/details_screen.dart';
-import 'app_list_tile.dart';
 
 class BeerListItem extends StatelessWidget {
   final Beer beer;
+  final bool isFavorite;
+  final void Function()? onIconTap;
 
   const BeerListItem({
+    required this.onIconTap,
     required this.beer,
+    required this.isFavorite,
     Key? key,
   }) : super(key: key);
 
@@ -22,7 +24,10 @@ class BeerListItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailesScreen(beer: beer),
+              builder: (context) => DetailesScreen(
+                beer: beer,
+                isFavorite: isFavorite,
+              ),
             ),
           );
         },
@@ -30,7 +35,19 @@ class BeerListItem extends StatelessWidget {
           elevation: 4.0,
           child: Column(
             children: [
-              AppListTile(beer: beer),
+              ListTile(
+                title: Text(beer.name),
+                subtitle: Text("ABV: ${beer.abv.toStringAsFixed(1)}"),
+                trailing: GestureDetector(
+                  onTap: onIconTap,
+                  child: isFavorite
+                      ? const Icon(Icons.favorite, color: Colors.red)
+                      : const Icon(
+                          Icons.favorite_border_rounded,
+                          color: Colors.black,
+                        ),
+                ),
+              ),
               Hero(
                 tag: beer.name,
                 child: SizedBox(
