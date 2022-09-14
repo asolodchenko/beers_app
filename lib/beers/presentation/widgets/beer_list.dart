@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../beers.dart';
 
-class BlocksList extends StatelessWidget {
+class BeersList extends StatelessWidget {
   final List<Beer> beersList;
   final Set<Beer> favoriteBeersList;
 
-  const BlocksList({
+  const BeersList({
     required this.beersList,
     required this.favoriteBeersList,
     Key? key,

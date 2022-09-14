@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'beers/beers.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await initServiceLocator();
   runApp(const MyApp());
 }

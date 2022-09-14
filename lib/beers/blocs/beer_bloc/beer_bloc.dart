@@ -10,15 +10,19 @@ part 'beer_bloc.freezed.dart';
 
 class BeerBloc extends Bloc<BeerEvent, BeerState> {
   final BeersRepository repository;
+  final LocalRepository localRepository;
 
-  BeerBloc({required this.repository}) : super(const BeerState.initial()) {
+  BeerBloc({
+    required this.repository,
+    required this.localRepository,
+  }) : super(const BeerState.initial()) {
     on<_ToggleFavorite>(_toggleFavorite);
     on<_FetchData>(_fetchData);
   }
 
   Future<void> _fetchData(_FetchData event, Emitter emit) async {
     emit(const BeerState.loading());
-    Set<Beer> selectedBeers = {};
+    final selectedBeers = await localRepository.getDataFromCache();
 
     try {
       final beers = await repository.getPosts();
@@ -37,14 +41,22 @@ class BeerBloc extends Bloc<BeerEvent, BeerState> {
         orElse: () {},
         loaded: (state) {
           if (state.selectedBeers.contains(event.beer)) {
-            emit(BeerState.loaded(
+            final updatedSelectedBeers = {...state.selectedBeers}
+              ..remove(event.beer);
+            localRepository.dataToCache(updatedSelectedBeers);
+
+            return emit(BeerState.loaded(
               beers: state.beers,
-              selectedBeers: {...state.selectedBeers}..remove(event.beer),
+              selectedBeers: updatedSelectedBeers,
             ));
           } else {
-            emit(BeerState.loaded(
+            final updatedSelectedBeers = {...state.selectedBeers}
+              ..add(event.beer);
+            localRepository.dataToCache(updatedSelectedBeers);
+
+            return emit(BeerState.loaded(
               beers: state.beers,
-              selectedBeers: {...state.selectedBeers}..add(event.beer),
+              selectedBeers: updatedSelectedBeers,
             ));
           }
         });

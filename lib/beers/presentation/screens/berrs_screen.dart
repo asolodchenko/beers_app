@@ -24,7 +24,7 @@ class BeersScreen extends StatelessWidget {
                 loading: (_) =>
                     const Center(child: CircularProgressIndicator()),
                 error: (error) => Center(child: Text(error.error.toString())),
-                loaded: (loaded) => BlocksList(
+                loaded: (loaded) => BeersList(
                   beersList: loaded.beers,
                   favoriteBeersList: loaded.selectedBeers,
                 ),
